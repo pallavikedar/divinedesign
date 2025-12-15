@@ -77,12 +77,12 @@ export default function TailorManagement() {
     setKapdaInventory(kapdaInventory.filter((k) => k.id !== id))
   }
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.mobileNo.includes(searchQuery) ||
-      order.orderNo.toString().includes(searchQuery),
-  )
+  // const filteredOrders = orders.filter(
+  //   (order) =>
+  //     order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     order.mobileNo.includes(searchQuery) ||
+  //     order.orderNo.toString().includes(searchQuery),
+  // )
 
   return (
     <div className="min-h-screen bg-background">
@@ -101,7 +101,7 @@ export default function TailorManagement() {
           <OrderForm
             onSave={handleSaveOrder}
             editingOrder={editingOrder}
-            nextOrderNo={orders.length > 0 ? Math.max(...orders.map((o) => o.orderNo)) + 1 : 1}
+            // nextOrderNo={orders.length > 0 ? Math.max(...orders.map((o) => o.orderNo)) + 1 : 1}
           />
         ) : view === "details" && selectedOrder ? (
           <OrderDetailsPage order={selectedOrder} onBack={handleBackToList} onEdit={handleEditOrder} />
@@ -109,7 +109,7 @@ export default function TailorManagement() {
           <KapdaInventory inventory={kapdaInventory} onSave={handleSaveKapda} onDelete={handleDeleteKapda} />
         ) : (
           <OrderList
-            orders={filteredOrders}
+            // orders={filteredOrders}
             onEdit={handleEditOrder}
             onDelete={handleDeleteOrder}
             onViewDetails={handleViewDetails}

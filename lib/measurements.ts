@@ -97,22 +97,26 @@ interface MeasurementField {
 export const measurementFields: Record<string, MeasurementField[]> = {
   coat: [
     { id: "lambai", label: "Length", labelHi: "लंबाई" },
+     { id: "chati", label: "Chest", labelHi: "छाती" },
     { id: "pet", label: "Belly", labelHi: "पेट" },
-    { id: "chati", label: "Chest", labelHi: "छाती" },
+   
     { id: "seat", label: "Seat", labelHi: "सीट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
     { id: "asteen", label: "Sleeve", labelHi: "आस्तीन" },
     { id: "gala", label: "Neck", labelHi: "गला" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   jodhpuri: [
     { id: "lambai", label: "Length", labelHi: "लंबाई" },
-    { id: "pet", label: "Belly", labelHi: "पेट" },
+   
     { id: "chati", label: "Chest", labelHi: "छाती" },
+     { id: "pet", label: "Belly", labelHi: "पेट" },
     { id: "seat", label: "Seat", labelHi: "सीट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
     { id: "asteen", label: "Sleeve", labelHi: "आस्तीन" },
     { id: "gala", label: "Neck", labelHi: "गला" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   pant: [
@@ -123,17 +127,20 @@ export const measurementFields: Record<string, MeasurementField[]> = {
     { id: "latka", label: "Inseam", labelHi: "लटका" },
     { id: "bottom", label: "Bottom", labelHi: "बाटम" },
     { id: "ghutna", label: "Knee", labelHi: "घुटना" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   shirt: [
     { id: "lambai", label: "Length", labelHi: "लंबाई" },
-    { id: "pet", label: "Belly", labelHi: "पेट" },
     { id: "chati", label: "Chest", labelHi: "छाती" },
+    { id: "pet", label: "Belly", labelHi: "पेट" },
+    
     { id: "seat", label: "Seat", labelHi: "सीट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
     { id: "asteen", label: "Sleeve", labelHi: "आस्तीन" },
     { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "kaf", label: "Cuff", labelHi: "कफ" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   kurta: [
@@ -146,6 +153,7 @@ export const measurementFields: Record<string, MeasurementField[]> = {
     { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "mohri", label: "Cuff", labelHi: "मोहरी" },
     { id: "kaf", label: "Armhole", labelHi: "कफ" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   paijama: [
@@ -156,20 +164,27 @@ export const measurementFields: Record<string, MeasurementField[]> = {
     { id: "latka", label: "Inseam", labelHi: "लटका" },
     { id: "bottom", label: "Bottom", labelHi: "बाटम" },
     { id: "ghutna", label: "Knee", labelHi: "घुटना" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   waistcoat: [
     { id: "lambai", label: "Length", labelHi: "लंबाई" },
+     { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "chati", label: "Chest", labelHi: "छाती" },
     { id: "pet", label: "Belly", labelHi: "पेट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
+    { id: "seat", label: "Seat", labelHi: "सीट" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   modiJacket: [
     { id: "lambai", label: "Length", labelHi: "लंबाई" },
+    { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "chati", label: "Chest", labelHi: "छाती" },
     { id: "pet", label: "Belly", labelHi: "पेट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
+    { id: "seat", label: "Seat", labelHi: "सीट" },
+    { id: "note", label: "note", labelHi: "नोट " },
   ],
 };
 

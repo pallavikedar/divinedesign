@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "components/order-form.jsx", "components/[id]/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

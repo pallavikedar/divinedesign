@@ -13,6 +13,11 @@ interface HeaderProps {
   onSearchChange: (query: string) => void
   inventoryCount: number
 }
+const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
 
 export function Header({
   view,
@@ -22,7 +27,10 @@ export function Header({
   searchQuery,
   onSearchChange,
   inventoryCount,
-}: HeaderProps) {
+  
+}: HeaderProps)
+
+ {
   return (
     <header className="border-b border-border bg-card sticky top-0 z-10">
       <div className="container mx-auto px-4 py-4">
@@ -63,7 +71,7 @@ export function Header({
             </Button>
             <Button variant={view === "list" ? "default" : "outline"} size="sm" onClick={() => onViewChange("list")}>
               <ListOrdered className="h-4 w-4 mr-2" />
-              Orders ({orderCount})
+              Orders
             </Button>
             <Button
               variant={view === "inventory" ? "default" : "outline"}
@@ -71,7 +79,15 @@ export function Header({
               onClick={() => onViewChange("inventory")}
             >
               <Package className="h-4 w-4 mr-2" />
-              Kapda ({inventoryCount})
+              Kapda
+            </Button>
+             <Button
+             
+              size="sm"
+             onClick={handleLogout}
+            >
+              
+              logout
             </Button>
           </div>
         </div>

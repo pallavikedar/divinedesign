@@ -189,7 +189,6 @@
 
 
 
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -220,17 +219,21 @@ export function StockModal({ kapda, onClose, onStockUpdate }: StockModalProps) {
   const fetchStockHistory = async () => {
     if (!token) return
     try {
-      const res = await fetch(`${BASE_URL}/kapda/${kapda.id}/stock-history`, {
+      const res = await fetch(`${BASE_URL}/kapda/history/${kapda.id}`, {
         headers: {
-          authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       if (!res.ok) throw new Error("Failed to fetch stock history")
       const data = await res.json()
+      // Ensure data is always an array to prevent map errors
+      // const historyArray = Array.isArray(data) ? data : []
       setStockHistory(data)
       console.log("Fetched stock history:",data)
     } catch (error) {
       console.error(error)
+      // On error, ensure it's reset to empty array
+      setStockHistory([])
     }
   }
 
@@ -265,7 +268,7 @@ export function StockModal({ kapda, onClose, onStockUpdate }: StockModalProps) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       })
@@ -391,7 +394,7 @@ export function StockModal({ kapda, onClose, onStockUpdate }: StockModalProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {[...stockHistory].reverse().map((entry) => (
+                  {stockHistory.history.map((entry) => (
                     <TableRow key={entry.id}>
                       <TableCell>{new Date(entry.date).toLocaleDateString("en-IN")}</TableCell>
                       <TableCell>
@@ -404,7 +407,7 @@ export function StockModal({ kapda, onClose, onStockUpdate }: StockModalProps) {
                         </span>
                       </TableCell>
                       <TableCell>
-                        {entry.quantity} {kapda.unit}
+                        {entry.quantity}
                       </TableCell>
                       <TableCell>{entry.note || "-"}</TableCell>
                     </TableRow>

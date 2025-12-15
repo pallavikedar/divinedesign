@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -41,6 +40,7 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
   const [searchQuery, setSearchQuery] = useState("")
   const [stockModalItem, setStockModalItem] = useState<Kapda | null>(null)
   const [inventoryState, setInventoryState] = useState<Kapda[]>(inventory)
+  const [deletingId, setDeletingId] = useState<number | null>(null)  // For loading state
 
   const [formData, setFormData] = useState<Omit<Kapda, "id">>({
     barcode: generateBarcode(),
@@ -73,69 +73,73 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
   }
 
   const handleSubmit = async () => {
-  // Manual validation
-  if (
-    !formData.barcode.trim() ||
-    !formData.name.trim() ||
-    !formData.type.trim() ||
-    !formData.color.trim() ||
-    formData.quantity <= 0 ||
-    formData.pricePerUnit <= 0 ||
-    !formData.supplier.trim() ||
-    !formData.dateAdded.trim()
-  ) {
-    alert("Please fill all required fields correctly.")
-    return
+    // Manual validation
+    if (
+      !formData.barcode.trim() ||
+      !formData.name.trim() ||
+      !formData.type.trim() ||
+      !formData.color.trim() ||
+      formData.quantity <= 0 ||
+      formData.pricePerUnit <= 0 ||
+      !formData.supplier.trim() ||
+      !formData.dateAdded.trim()
+    ) {
+      alert("Please fill all required fields correctly.")
+      return
+    }
+
+    if (!token) {
+      alert("No authentication token found. Please log in again.")
+      return
+    }
+
+    const payload = {
+      barcode: formData.barcode,
+      name: formData.name,
+      type: formData.type,
+      color: formData.color,
+      quantity: Number(formData.quantity),
+      unit: formData.unit,
+      pricePerUnit: Number(formData.pricePerUnit),
+      supplier: formData.supplier,
+      dateAdded: formData.dateAdded,
+      stockHistory: formData.stockHistory || [],
+    }
+
+    let url = `${BASE_URL}/kapda`
+    let method = "POST"
+
+    if (editingItem?.id) {
+      url = `${BASE_URL}/kapda/${editingItem.id}`
+      method = "PUT"
+    }
+
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,  // Fixed: Capital "A"
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        const msg = await response.text()
+        console.error("SAVE ERROR:", msg, "Status:", response.status)
+        alert(`Failed to save: ${msg || "Unknown server error"} (Status: ${response.status})`)
+        return
+      }
+
+      const saved = await response.json()
+      onSave(saved)
+      resetForm()
+      setShowForm(false)
+    } catch (error: any) {
+      console.error("Fetch error:", error)
+      alert("Network error: " + (error.message || "Check your connection"))
+    }
   }
-
-  if (!token) {
-    alert("No authentication token found")
-    return
-  }
-
-  const payload = {
-    barcode: formData.barcode,
-    name: formData.name,
-    type: formData.type,
-    color: formData.color,
-    quantity: Number(formData.quantity),
-    unit: formData.unit,
-    pricePerUnit: Number(formData.pricePerUnit),
-    supplier: formData.supplier,
-    dateAdded: formData.dateAdded,
-    stockHistory: formData.stockHistory || [],
-  }
-
-  let url = `${BASE_URL}/kapda`
-  let method = "POST"
-
-  if (editingItem?.id) {
-    url = `${BASE_URL}/kapda/${editingItem.id}`
-    method = "PUT"
-  }
-
-  const response = await fetch(url, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  })
-
-  if (!response.ok) {
-    const msg = await response.text()
-    console.error("SAVE ERROR:", msg)
-    alert("Failed: " + msg)
-    return
-  }
-
-  const saved = await response.json()
-  onSave(saved)
-  resetForm()
-  setShowForm(false)
-}
-
 
   const handleEdit = (item: Kapda) => {
     setFormData({
@@ -143,7 +147,7 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
       name: item.name,
       type: item.type,
       color: item.color,
-      quantity: item.quantity,
+      quantity: item.currentStock || item.quantity,  // Use currentStock if available
       unit: item.unit,
       pricePerUnit: item.pricePerUnit,
       supplier: item.supplier,
@@ -156,7 +160,7 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
 
   const handleStockUpdate = (updatedKapda: Kapda) => {
     onSave(updatedKapda)
-    setStockModalItem(updatedKapda)
+    setStockModalItem(null)  // Close modal after update
   }
 
   const handlePrintBarcode = (item: Kapda) => {
@@ -206,16 +210,26 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
 
   // 🔹 API loader
   const loadInventory = async () => {
-    if (!token) return
-    const res = await fetch(`${BASE_URL}/kapda`, {
-      headers: { authorization: `Bearer ${token}` },
-    })
-    if (!res.ok) {
-      console.error("Failed to load data")
+    if (!token) {
+      console.warn("No token for loading inventory")
       return
     }
-    const data = await res.json()
-    setInventoryState(data)
+    try {
+      const res = await fetch(`${BASE_URL}/kapda`, {
+        headers: { Authorization: `Bearer ${token}` },  // Fixed: Capital "A"
+      })
+      if (!res.ok) {
+        const msg = await res.text()
+        console.error("LOAD ERROR:", msg, "Status:", res.status)
+        alert(`Failed to load inventory: ${msg || "Unknown error"} (Status: ${res.status})`)
+        return
+      }
+      const data = await res.json()
+      setInventoryState(data)
+    } catch (error: any) {
+      console.error("Fetch error:", error)
+      alert("Network error loading inventory: " + (error.message || "Check your connection"))
+    }
   }
 
   useEffect(() => {
@@ -230,27 +244,45 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
     item.barcode.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const totalValue = inventoryState.reduce((sum, item) => sum + item.quantity * item.pricePerUnit, 0)
-  const lowStockItems = inventoryState.filter((item) => item.quantity < 10)
- const handleDelete = async (id: number) => {
-    if (!token) return
-    if (!confirm("Are you sure you want to delete this item?")) return
+  const totalValue = inventoryState.reduce((sum, item) => sum + (item.currentStock || item.quantity) * item.pricePerUnit, 0)
+  const lowStockItems = inventoryState.filter((item) => (item.currentStock || item.quantity) < 10)
 
-    const res = await fetch(`${BASE_URL}/kapda/${id}`, {
-      method: "DELETE",
-      headers: { authorization: `Bearer ${token}` },
-    })
-
-    if (!res.ok) {
-      const msg = await res.text()
-      alert("Failed to delete: " + msg)
+  const handleDelete = async (id: number) => {
+    if (!token) {
+      alert("No authentication token found. Please log in again.")
       return
     }
+    if (!confirm("Are you sure you want to delete this item?")) return
 
-    // Remove deleted item from local state
-    setInventoryState((prev) => prev.filter((item) => item.id !== id))
-    onDelete(id)
+    setDeletingId(id)  // Set loading state
+    console.log("Deleting ID:", id)  // Debug log
+
+    try {
+      const res = await fetch(`${BASE_URL}/kapda/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },  // Fixed: Capital "A"
+      })
+
+      if (!res.ok) {
+        const msg = await res.text()
+        console.error("DELETE ERROR:", msg, "Status:", res.status)
+        alert(`Failed to delete: ${msg || "Unknown server error"} (Status: ${res.status})`)
+        return
+      }
+
+      // Remove from local state
+      setInventoryState((prev) => prev.filter((item) => item.id !== id))
+      onDelete(id)
+      // Refresh from server for consistency
+      await loadInventory()
+    } catch (error: any) {
+      console.error("Fetch error:", error)
+      alert("Network error deleting item: " + (error.message || "Check your connection"))
+    } finally {
+      setDeletingId(null)  // Clear loading
+    }
   }
+
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
@@ -277,7 +309,7 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
               <div>
                 <p className="text-sm text-muted-foreground">Total Stock</p>
                 <p className="text-2xl font-bold">
-                  {inventoryState.reduce((sum, item) => sum + item.quantity, 0)} mtr
+                  {inventoryState.reduce((sum, item) => sum + (item.currentStock || item.quantity), 0)} mtr
                 </p>
               </div>
             </div>
@@ -483,7 +515,7 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
                 </TableHeader>
                 <TableBody>
                   {filteredInventory.map((item) => (
-                    <TableRow key={item.id} className={item.quantity < 10 ? "bg-red-50" : ""}>
+                    <TableRow key={item.id} className={(item.currentStock || item.quantity) < 10 ? "bg-red-50" : ""}>
                       <TableCell>
                         <code className="text-xs bg-muted px-2 py-1 rounded">{item.barcode}</code>
                       </TableCell>
@@ -491,15 +523,15 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
                       <TableCell>{item.type}</TableCell>
                       <TableCell>{item.color}</TableCell>
                       <TableCell>
-                        <span className={`font-medium ${item.quantity < 10 ? "text-red-600" : ""}`}>
-                          {item.currentStock} {item.unit}
+                        <span className={`font-medium ${(item.currentStock || item.quantity) < 10 ? "text-red-600" : ""}`}>
+                          {item.currentStock || item.quantity} {item.unit}
                         </span>
-                        {item.quantity < 10 && (
+                        {(item.currentStock || item.quantity) < 10 && (
                           <span className="ml-2 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">Low</span>
                         )}
                       </TableCell>
                       <TableCell>₹{item.pricePerUnit}</TableCell>
-                      <TableCell className="font-medium">₹{(item.quantity * item.pricePerUnit).toLocaleString()}</TableCell>
+                      <TableCell className="font-medium">₹{((item.currentStock || item.quantity) * item.pricePerUnit).toLocaleString()}</TableCell>
                       <TableCell>{item.supplier}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
@@ -512,8 +544,18 @@ export function KapdaInventory({ inventory, onSave, onDelete }: KapdaInventoryPr
                           <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)} title="Delete">
-                            <Trash2 className="h-4 w-4 text-destructive" />
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => handleDelete(item.id)} 
+                            title="Delete"
+                            disabled={!token || deletingId === item.id}  // UX: Disable if no token or loading
+                          >
+                            {deletingId === item.id ? (
+                              <BarChart3 className="h-4 w-4 animate-spin" />  // Spinner for loading
+                            ) : (
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            )}
                           </Button>
                         </div>
                       </TableCell>
