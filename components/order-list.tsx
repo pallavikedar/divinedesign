@@ -564,7 +564,7 @@ export function OrderList() {
 
   /* ================= SEARCH ================= */
   const filteredOrders = orders.filter((o) =>
-    `${o.orderNo} ${o.customerName} ${o.mobile}`
+    `${o.orderNo} ${o.customerName} ${o.mobile} ${o.orderDate}` 
       .toLowerCase()
       .includes(search.toLowerCase())
   );
