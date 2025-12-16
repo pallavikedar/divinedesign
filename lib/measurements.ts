@@ -169,21 +169,23 @@ export const measurementFields: Record<string, MeasurementField[]> = {
 
   waistcoat: [
     { id: "lambai", label: "Length", labelHi: "लंबाई" },
-     { id: "gala", label: "Neck", labelHi: "गला" },
+     
     { id: "chati", label: "Chest", labelHi: "छाती" },
     { id: "pet", label: "Belly", labelHi: "पेट" },
+     { id: "seat", label: "Seat", labelHi: "सीट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
-    { id: "seat", label: "Seat", labelHi: "सीट" },
+   { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "note", label: "note", labelHi: "नोट " },
   ],
 
   modiJacket: [
-    { id: "lambai", label: "Length", labelHi: "लंबाई" },
-    { id: "gala", label: "Neck", labelHi: "गला" },
+     { id: "lambai", label: "Length", labelHi: "लंबाई" },
+     
     { id: "chati", label: "Chest", labelHi: "छाती" },
     { id: "pet", label: "Belly", labelHi: "पेट" },
+     { id: "seat", label: "Seat", labelHi: "सीट" },
     { id: "shoulder", label: "Shoulder", labelHi: "शोल्डर" },
-    { id: "seat", label: "Seat", labelHi: "सीट" },
+   { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "note", label: "note", labelHi: "नोट " },
   ],
 };
