@@ -618,6 +618,7 @@ export function OrderList() {
             <thead className="bg-gray-100 text-gray-700">
               <tr>
                 <th className="p-3 border">Order No</th>
+                <th className="p-3 border">Order Date</th>
                 <th className="p-3 border">Customer</th>
                 <th className="p-3 border">Mobile</th>
                 <th className="p-3 border">Delivery Date</th>
@@ -635,6 +636,10 @@ export function OrderList() {
                 >
                   <td className="p-3 border text-center font-semibold">
                     #{order.orderNo}
+                  </td>
+                   <td className="p-3 border text-center">
+                    <Calendar className="inline w-4 h-4 mr-1" />
+                    {order.orderDate}
                   </td>
 
                   <td className="p-3 border">

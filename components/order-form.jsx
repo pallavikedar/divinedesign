@@ -806,6 +806,7 @@ export function OrderForm({ orderId, onSave }) {
           <div>
             <Label>Order No</Label>
            <Input
+           type="text"
   value={orderNo}
  onChange={(e) => {
   const value = Number(e.target.value);
@@ -922,11 +923,11 @@ export function OrderForm({ orderId, onSave }) {
         <CardContent className="grid md:grid-cols-3 gap-4">
           <div>
             <Label>Total</Label>
-            <Input type="number" value={total} onChange={(e) => setTotal(+e.target.value)} />
+            <Input type="text" value={total} onChange={(e) => setTotal(+e.target.value)} />
           </div>
           <div>
             <Label>Advance</Label>
-            <Input type="number" value={advance} onChange={(e) => setAdvance(+e.target.value)} />
+            <Input type="text" value={advance} onChange={(e) => setAdvance(+e.target.value)} />
           </div>
           <div>
             <Label>Balance</Label>
