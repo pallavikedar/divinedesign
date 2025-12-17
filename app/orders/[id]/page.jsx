@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IndianRupee, ArrowUp, ArrowDown, X, Printer, ArrowLeft } from "lucide-react";
 import { BASE_URL } from "@/app/config";
-
+import { measurementFields } from "@/lib/measurements";
 export default function OrderDetailsPage() {
   const params = useParams();
   const router = useRouter();
@@ -152,7 +152,7 @@ export default function OrderDetailsPage() {
         </div>
 
         {/* Measurements */}
-        {g.measurement && (
+        {/* {g.measurement && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
             {Object.entries(g.measurement)
               .filter(([_, value]) => value)
@@ -166,9 +166,50 @@ export default function OrderDetailsPage() {
                 </div>
               ))}
           </div>
-        )}
+        )} */}
+
+
+
+        {/* Measurements */}
+{g.measurement && measurementFields[g.type] && (
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
+    {measurementFields[g.type].map((field) => {
+      const value = g.measurement[field.id]
+
+      if (!value) return null
+
+      // Special handling for note
+      if (field.id === "note") {
+        return (
+          <div
+            key={field.id}
+            className="col-span-full bg-yellow-50 p-3 rounded-md text-gray-800"
+          >
+            <span className="font-semibold">{field.labelHi}:</span>{" "}
+            {value}
+          </div>
+        )
+      }
+
+      return (
+        <div
+          key={field.id}
+          className="bg-white p-2 rounded-md shadow-sm flex justify-between items-center hover:bg-gray-100 transition"
+        >
+          <span className="font-medium">{field.labelHi}</span>
+          <span className="text-gray-800">{value}</span>
+        </div>
+      )
+    })}
+  </div>
+)}
+
+        
       </div>
     ))}
+
+
+    
   </CardContent>
 </Card>
 

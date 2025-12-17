@@ -188,6 +188,17 @@ export const measurementFields: Record<string, MeasurementField[]> = {
    { id: "gala", label: "Neck", labelHi: "गला" },
     { id: "note", label: "note", labelHi: "नोट " },
   ],
+  
+  chudidar: [
+    { id: "lambai", label: "Length", labelHi: "लंबाई" },
+    { id: "kamar", label: "Waist", labelHi: "कमर" },
+    { id: "seat", label: "Seat", labelHi: "सीट" },
+    { id: "jang", label: "Thigh", labelHi: "जांग" },
+    { id: "latka", label: "Inseam", labelHi: "लटका" },
+    { id: "bottom", label: "Bottom", labelHi: "बाटम" },
+    { id: "ghutna", label: "Knee", labelHi: "घुटना" },
+    { id: "note", label: "note", labelHi: "नोट " },
+  ],
 };
 
 export const defaultMeasurements: Record<string, GarmentMeasurements> =

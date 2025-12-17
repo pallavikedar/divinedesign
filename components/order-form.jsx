@@ -661,6 +661,7 @@ export function OrderForm({ orderId, onSave }) {
     { id: "paijama", label: "Paijama", labelHi: "पैजामा" },
     { id: "waistcoat", label: "Waistcoat", labelHi: "वेस्टकोट" },
     { id: "modiJacket", label: "Modi Jacket", labelHi: "मोदी जैकेट" },
+    { id: "chudidar", label: "Chudidar", labelHi: "चूड़ीदार" },
   ];
 
   const [customerName, setCustomerName] = useState("");
@@ -871,7 +872,7 @@ export function OrderForm({ orderId, onSave }) {
          <CardHeader>
            <CardTitle>Select Garments / कपड़े चुनें</CardTitle>
          </CardHeader>
-         <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+         <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
            {garmentTypes.map((g) => (
             <div
               key={g.id}
