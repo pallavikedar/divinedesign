@@ -662,6 +662,7 @@ export function OrderForm({ orderId, onSave }) {
     { id: "waistcoat", label: "Waistcoat", labelHi: "वेस्टकोट" },
     { id: "modiJacket", label: "Modi Jacket", labelHi: "मोदी जैकेट" },
     { id: "chudidar", label: "Chudidar", labelHi: "चूड़ीदार" },
+    { id: "Sherwani", label: "Sherwani", labelHi: "शेरवानी" },
   ];
 
   const [customerName, setCustomerName] = useState("");
